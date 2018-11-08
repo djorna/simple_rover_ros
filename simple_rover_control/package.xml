@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>simple_rover_control</name>
+  <version>0.0.0</version>
+  <description>The simple_rover_control package</description>
+
+  <maintainer email="davidjorna@gmail.com">David Jorna</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>controller_manager</depend>
+  <depend>effort_controllers</depend>
+  <depend>joint_state_controller</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>rqt_gui</depend>
+
+</package>

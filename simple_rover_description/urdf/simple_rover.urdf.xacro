@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<robot name="simple_rover" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="PI" value="3.1415926535897931" />
+  <xacro:property name="base_depth" value="1" />
+  <xacro:property name="base_width" value="0.5" />
+  <xacro:property name="base_height" value="0.1" />
+  <xacro:property name="base_depth_sq" value="${base_depth * base_depth}" />
+  <xacro:property name="base_height_sq" value="${base_height* base_height}" />
+  <xacro:property name="base_width_sq" value="${base_width* base_width}" />
+  <xacro:property name="base_density" value="2710" /> <!-- Aluminum -->
+  <xacro:property name="base_mass" 
+    value="${base_depth * base_width * base_height * base_density}" />
+  <xacro:property name="wheel_radius" value="0.25" />
+  <xacro:property name="wheel_width" value="0.1" />
+  <xacro:property name="wheel_radius_sq" value="${wheel_radius * wheel_radius}" />
+  <xacro:property name="wheel_width_sq" value="${wheel_width* wheel_width}" />
+  <xacro:property name="wheel_rpy" value="${-PI / 2} 0 0" />
+  <xacro:property name="wheel_density" value="2710" /> <!-- Aluminum -->
+  <xacro:property name="wheel_mass" 
+    value="${wheel_radius_sq * PI * wheel_width * wheel_density}" />
+
+  <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+  <xacro:include filename="$(find simple_rover_description)/urdf/simple_rover.gazebo" />
+
+  <xacro:macro name="wheel" params="pos xyz">
+    <link name="wheel_${pos}_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1"/>
+        <inertia ixx="${wheel_mass * (3 * wheel_radius_sq + wheel_width_sq) / 12}"
+               ixy="0"
+               ixz="0"
+               iyy="${wheel_mass * (3 * wheel_radius_sq + wheel_width_sq) / 12}"
+               iyz="0"
+               izz="${wheel_mass * wheel_radius_sq / 2}"/>
+      </inertial>
+
+      <visual>
+        <!--origin xyz="${xyz}" rpy="${wheel_rpy}"/ -->
+        <geometry>
+          <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="wheel_${pos}_joint" type="continuous">
+      <origin xyz="${xyz}" rpy="${wheel_rpy}" />
+      <parent link="base_link" />
+      <child link="wheel_${pos}_link" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <transmission name="wheel_${pos}_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="wheel_${pos}_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="wheel_${pos}_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        <!-- hardwareInterface>EffortJointInterface</hardwareInterface -->
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <!-- Links -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${base_mass}"/>
+      <inertia ixx="${base_mass * (base_height_sq + base_depth_sq) / 12}"
+               ixy="0"
+               ixz="0"
+               iyy="${base_mass * (base_width_sq + base_depth_sq) / 12}"
+               iyz="0"
+               izz="${base_mass * (base_height_sq + base_width_sq) / 12}"/>
+    </inertial> 
+
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="${base_depth} ${base_width} ${base_height}" />
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${base_depth} ${base_width} ${base_height}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Wheels -->
+  <xacro:wheel pos="right_front" 
+    xyz="${base_depth * 0.4} ${-base_width / 2 - wheel_width / 2} 0" />
+  <xacro:wheel pos="right_back"
+    xyz="${-base_depth * 0.4} ${-base_width / 2 - wheel_width / 2} 0" />
+  <xacro:wheel pos="left_front"
+    xyz="${base_depth * 0.4} ${base_width / 2 + wheel_width / 2} 0" />
+  <xacro:wheel pos="left_back"
+    xyz="${-base_depth * 0.4} ${base_width / 2 + wheel_width / 2} 0" />
+
+</robot>

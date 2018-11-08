@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>simple_rover_gazebo</name>
+  <version>0.0.0</version>
+  <description>The simple_rover_gazebo package</description>
+
+  <maintainer email="davidjorna@gmail.com">David Jorna</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>gazebo_plugins</depend>
+  <depend>gazebo_ros</depend>
+  <depend>gazebo_ros_control</depend>
+  <depend>simple_rover_control</depend>
+  <depend>simple_rover_description</depend>
+  <depend>xacro</depend>
+
+</package>
