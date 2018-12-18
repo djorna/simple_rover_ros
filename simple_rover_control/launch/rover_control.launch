@@ -1,19 +1,15 @@
 <launch>
 
-  <param name="robot_description"
-    command="$(find xacro)/xacro --inorder '$(find robots)/urdf/.xacro'" />
-
   <!-- Load joint controller configurations from YAML file to parameter server -->
-  <rosparam file="$(find robots)/config/rover_control.yaml" command="load"/>
+  <rosparam file="$(find simple_rover_control)/config/rover_control.yaml" command="load"/>
 
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-	output="screen" ns="/rover" args="joint_state_controller
-					  joint1_position_controller
-            wheel_right_front_position_controller
-            wheel_right_back_position_controller
-            wheel_left_front_position_controller
-            wheel_left_back_position_controller" />
+	output="screen" ns="/rover"
+      args="wheel_right_front_controller
+            wheel_right_back_controller
+            wheel_left_front_controller
+            wheel_left_back_controller" />
 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"

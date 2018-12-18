@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<robot name="zed_camera" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find simple_rover_description)/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find simple_rover_description)/urdf/materials.urdf.xacro" />
+
+  <xacro:macro name="zed_camera" params="parent xyz rpy">
+
+    <!-- Camera Center -->
+    <link name="zed_camera_center">
+      <visual>
+        <origin xyz="${xyz}" rpy="${rpy}"/>
+        <geometry>
+          <mesh filename="package://simple_rover_description/meshes/ZED.stl" />
+        </geometry>
+        <material name="light_grey" />
+      </visual>
+    </link>
+
+    <joint name="origin_joint" type=fixed>
+      <origin xyz="0 0 0 " rpy="${PI/2} 0 ${PI/2}" />
+      <parent link="${parent}" />
+      <child link="zed_camera_center" /> 
+      </joint>
+
+    <!-- Left Camera -->
+    <joint name="zed_left_camera_joint" type="fixed">
+      <parent link="zed_camera_center"/>
+      <child link="zed_left_camera_frame"/>
+      <origin xyz="0 0.06 0" rpy="0 0 0" />
+    </joint>
+
+    <link name="zed_left_camera_frame" />
+
+    <joint name="zed_left_camera_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="-1.57079632679 0.0 -1.57079632679"/>
+      <parent link="zed_left_camera_frame"/>
+      <child link="zed_left_camera_optical_frame"/>
+    </joint>
+
+    <link name="zed_left_camera_optical_frame"/>
+
+    <!-- Right Camera -->
+    <joint name="zed_right_camera_joint" type="fixed">
+      <parent link="zed_camera_center"/>
+      <child link="zed_right_camera_frame"/>
+      <origin xyz="0 -0.06 0" rpy="0 0 0" />
+    </joint>
+
+    <link name="zed_right_camera_frame" />
+
+    <joint name="zed_right_camera_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="-1.57079632679 0.0 -1.57079632679"/>
+      <parent link="zed_right_camera_frame"/>
+      <child link="zed_right_camera_optical_frame"/>
+    </joint>
+
+    <link name="zed_right_camera_optical_frame"/>
+
+    <!-- Kinect depth camera plugin -->
+    <depth_camera_sim /> 
+
+  </xacro:macro>  
+</robot>

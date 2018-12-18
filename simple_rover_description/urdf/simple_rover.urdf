@@ -4,24 +4,88 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="simple_rover" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- Links -->
-  <link name="base_link">
+  <gazebo>
+    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+      <robotNamespace>/rover</robotNamespace>
+      <!-- robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+    </plugin>
+  </gazebo>
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+  <material name="blue">
+    <color rgba="0.0 0.0 0.8 1.0"/>
+  </material>
+  <material name="green">
+    <color rgba="0.0 0.8 0.0 1.0"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+  <material name="orange">
+    <color rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
+  </material>
+  <material name="brown">
+    <color rgba="0.870588235294 0.811764705882 0.764705882353 1.0"/>
+  </material>
+  <material name="red">
+    <color rgba="0.8 0.0 0.0 1.0"/>
+  </material>
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+  <material name="light_grey">
+    <color rgba="0.8 0.8 0.8 0.8"/>
+  </material>
+  <!-- 
+  Used for fixing robot to Gazebo 'base_link'
+  Base link cannot have inertia
+  -->
+  <link name="base_link"/>
+  <!-- Main body -->
+  <link name="body_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="135.5"/>
+      <inertia ixx="11.4045833333" ixy="0" ixz="0" iyy="14.1145833333" iyz="0" izz="2.93583333333"/>
+    </inertial>
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
         <box size="1 0.5 0.1"/>
       </geometry>
+      <material name="orange"/>
     </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="1 0.5 0.1"/>
+      </geometry>
+    </collision>
   </link>
+  <joint name="base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="body_link"/>
+  </joint>
   <link name="wheel_right_front_link">
-    <!-- inertial></inertial -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="1"/>
+      <inertia ixx="0.875759858342" ixy="0" ixz="0" iyy="0.875759858342" iyz="0" izz="1.66283517407"/>
+    </inertial>
     <visual>
       <!--origin xyz="${xyz}" rpy="${wheel_rpy}"/ -->
       <geometry>
         <cylinder length="0.1" radius="0.25"/>
       </geometry>
+      <material name="blue"/>
     </visual>
-    <!-- collision></collision -->
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.25"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="wheel_right_front_joint" type="continuous">
     <origin rpy="-1.57079632679 0 0" xyz="0.4 -0.3 0"/>
@@ -32,7 +96,7 @@
   <transmission name="wheel_right_front_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="wheel_right_front_joint">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="wheel_right_front_motor">
       <mechanicalReduction>1</mechanicalReduction>
@@ -40,14 +104,24 @@
     </actuator>
   </transmission>
   <link name="wheel_right_back_link">
-    <!-- inertial></inertial -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="1"/>
+      <inertia ixx="0.875759858342" ixy="0" ixz="0" iyy="0.875759858342" iyz="0" izz="1.66283517407"/>
+    </inertial>
     <visual>
       <!--origin xyz="${xyz}" rpy="${wheel_rpy}"/ -->
       <geometry>
         <cylinder length="0.1" radius="0.25"/>
       </geometry>
+      <material name="blue"/>
     </visual>
-    <!-- collision></collision -->
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.25"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="wheel_right_back_joint" type="continuous">
     <origin rpy="-1.57079632679 0 0" xyz="-0.4 -0.3 0"/>
@@ -58,7 +132,7 @@
   <transmission name="wheel_right_back_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="wheel_right_back_joint">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="wheel_right_back_motor">
       <mechanicalReduction>1</mechanicalReduction>
@@ -66,14 +140,24 @@
     </actuator>
   </transmission>
   <link name="wheel_left_front_link">
-    <!-- inertial></inertial -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="1"/>
+      <inertia ixx="0.875759858342" ixy="0" ixz="0" iyy="0.875759858342" iyz="0" izz="1.66283517407"/>
+    </inertial>
     <visual>
       <!--origin xyz="${xyz}" rpy="${wheel_rpy}"/ -->
       <geometry>
         <cylinder length="0.1" radius="0.25"/>
       </geometry>
+      <material name="blue"/>
     </visual>
-    <!-- collision></collision -->
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.25"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="wheel_left_front_joint" type="continuous">
     <origin rpy="-1.57079632679 0 0" xyz="0.4 0.3 0"/>
@@ -84,7 +168,7 @@
   <transmission name="wheel_left_front_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="wheel_left_front_joint">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="wheel_left_front_motor">
       <mechanicalReduction>1</mechanicalReduction>
@@ -92,14 +176,24 @@
     </actuator>
   </transmission>
   <link name="wheel_left_back_link">
-    <!-- inertial></inertial -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="1"/>
+      <inertia ixx="0.875759858342" ixy="0" ixz="0" iyy="0.875759858342" iyz="0" izz="1.66283517407"/>
+    </inertial>
     <visual>
       <!--origin xyz="${xyz}" rpy="${wheel_rpy}"/ -->
       <geometry>
         <cylinder length="0.1" radius="0.25"/>
       </geometry>
+      <material name="blue"/>
     </visual>
-    <!-- collision></collision -->
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.25"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="wheel_left_back_joint" type="continuous">
     <origin rpy="-1.57079632679 0 0" xyz="-0.4 0.3 0"/>
@@ -110,16 +204,96 @@
   <transmission name="wheel_left_back_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="wheel_left_back_joint">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="wheel_left_back_motor">
       <mechanicalReduction>1</mechanicalReduction>
       <!-- hardwareInterface>EffortJointInterface</hardwareInterface -->
     </actuator>
   </transmission>
-  <gazebo>
-    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
-    </plugin>
+  <!-- Camera Center -->
+  <link name="camera_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+      <geometry>
+        <mesh filename="package://simple_rover_description/meshes/ZED.stl"/>
+      </geometry>
+      <material name="light_grey"/>
+    </visual>
+  </link>
+  <joint name="origin_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <!-- rpy="${PI/2} 0 ${PI/2}" /-->
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+  </joint>
+  <!-- Left Camera -->
+  <joint name="zed_left_camera_joint" type="fixed">
+    <parent link="camera_link"/>
+    <child link="zed_left_camera_frame"/>
+    <origin rpy="0 0 0" xyz="0 0.06 0"/>
+  </joint>
+  <link name="zed_left_camera_frame"/>
+  <joint name="zed_left_camera_optical_joint" type="fixed">
+    <origin rpy="-1.57079632679 0.0 -1.57079632679" xyz="0 0 0"/>
+    <parent link="zed_left_camera_frame"/>
+    <child link="zed_left_camera_optical_frame"/>
+  </joint>
+  <link name="zed_left_camera_optical_frame"/>
+  <!-- Right Camera -->
+  <joint name="zed_right_camera_joint" type="fixed">
+    <parent link="camera_link"/>
+    <child link="zed_right_camera_frame"/>
+    <origin rpy="0 0 0" xyz="0 -0.06 0"/>
+  </joint>
+  <link name="zed_right_camera_frame"/>
+  <joint name="zed_right_camera_optical_joint" type="fixed">
+    <origin rpy="-1.57079632679 0.0 -1.57079632679" xyz="0 0 0"/>
+    <parent link="zed_right_camera_frame"/>
+    <child link="zed_right_camera_optical_frame"/>
+  </joint>
+  <link name="zed_right_camera_optical_frame"/>
+  <joint name="camera_depth_optical_frame_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="camera_link"/>
+    <child link="camera_depth_optical_frame"/>
+  </joint>
+  <link name="camera_depth_optical_frame"/>
+  <gazebo reference="camera_link">
+    <sensor name="camera" type="depth">
+      <always_on>true</always_on>
+      <update_rate>20.0</update_rate>
+      <camera>
+        <horizontal_fov>1.0471975512</horizontal_fov>
+        <image>
+          <format>B8G8R8</format>
+          <width>640</width>
+          <height>480</height>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>8.0</far>
+        </clip>
+      </camera>
+      <plugin filename="libgazebo_ros_openni_kinect.so" name="kinect_camera_controller">
+        <cameraName>camera</cameraName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>10</updateRate>
+        <imageTopicName>rgb/image_raw</imageTopicName>
+        <depthImageTopicName>depth/image_raw</depthImageTopicName>
+        <pointCloudTopicName>depth/points</pointCloudTopicName>
+        <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+        <frameName>camera_depth_optical_frame</frameName>
+        <baseline>0.1</baseline>
+        <distortion_k1>0.0</distortion_k1>
+        <distortion_k2>0.0</distortion_k2>
+        <distortion_k3>0.0</distortion_k3>
+        <distortion_t1>0.0</distortion_t1>
+        <distortion_t2>0.0</distortion_t2>
+        <pointCloudCutoff>0.4</pointCloudCutoff>
+      </plugin>
+    </sensor>
   </gazebo>
 </robot>
 

@@ -22,7 +22,18 @@
 
   <!-- Import all Gazebo-customization elements, including Gazebo colors -->
   <xacro:include filename="$(find simple_rover_description)/urdf/simple_rover.gazebo" />
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find simple_rover_description)/urdf/materials.urdf.xacro" />
+  <!-- ZED depth camera -->
+  <xacro:include filename="$(find simple_rover_description)/urdf/sensors/zed/zed.urdf.xacro" /> 
 
+  <!-- 
+  Used for fixing robot to Gazebo 'base_link'
+  Base link cannot have inertia
+  -->
+  <link name="base_link"/>
+
+  <!-- Generic wheel macro -->
   <xacro:macro name="wheel" params="pos xyz">
     <link name="wheel_${pos}_link">
       <inertial>
@@ -41,6 +52,7 @@
         <geometry>
           <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
         </geometry>
+        <material name="blue" />
       </visual>
 
       <collision>
@@ -57,7 +69,7 @@
       <child link="wheel_${pos}_link" />
       <axis xyz="0 0 1" />
     </joint>
-
+    <!--
     <transmission name="wheel_${pos}_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="wheel_${pos}_joint">
@@ -65,13 +77,15 @@
       </joint>
       <actuator name="wheel_${pos}_motor">
         <mechanicalReduction>1</mechanicalReduction>
-        <!-- hardwareInterface>EffortJointInterface</hardwareInterface -->
       </actuator>
     </transmission>
+    -->
+    <!-- hardwareInterface>EffortJointInterface</hardwareInterface -->
   </xacro:macro>
 
-  <!-- Links -->
-  <link name="base_link">
+  <!-- Main body -->
+  <link name="body_link">
+
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <mass value="${base_mass}"/>
@@ -88,6 +102,7 @@
       <geometry>
         <box size="${base_depth} ${base_width} ${base_height}" />
       </geometry>
+      <material name="orange" />
     </visual>
 
     <collision>
@@ -98,6 +113,11 @@
     </collision>
   </link>
 
+  <joint name="base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="body_link"/>
+  </joint>
+
   <!-- Wheels -->
   <xacro:wheel pos="right_front" 
     xyz="${base_depth * 0.4} ${-base_width / 2 - wheel_width / 2} 0" />
@@ -107,5 +127,8 @@
     xyz="${base_depth * 0.4} ${base_width / 2 + wheel_width / 2} 0" />
   <xacro:wheel pos="left_back"
     xyz="${-base_depth * 0.4} ${base_width / 2 + wheel_width / 2} 0" />
+
+  <!-- ZED camera -->
+  <xacro:zed_camera parent="base_link" xyz="0 0 0.5" rpy="0 0 0" />
 
 </robot>
