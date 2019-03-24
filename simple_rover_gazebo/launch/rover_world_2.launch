@@ -26,7 +26,7 @@
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model simple_rover -param robot_description -z 20"/>
 
-  <!-- Publish robot state to get tf data --
+  <!-- Publish robot state to get tf data -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
     <param name="publish_frequency" type="double" value="30.0" />
   </node>
